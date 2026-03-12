@@ -1,0 +1,31 @@
+{
+    "name": "wamesk/laravel-nova-inline-toggle",
+    "description": "A Laravel Nova inline toggle/switch field with index page inline editing.",
+    "keywords": [
+        "laravel",
+        "nova",
+        "toggle",
+        "inline"
+    ],
+    "license": "MIT",
+    "require": {
+        "php": "^8.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Wame\\InlineToggle\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Wame\\InlineToggle\\FieldServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
