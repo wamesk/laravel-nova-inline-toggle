@@ -9,6 +9,8 @@ A Laravel Nova field that renders a toggle/switch with **inline editing** on the
 - Read-only badge or inline toggle on **detail** page
 - Standard checkbox on **form** page
 - Customizable **success/error messages** (per state or general)
+- **`dependsOn`** support — reactively show/hide or modify the field based on other field values
+- **Readonly** support on index and detail toggle buttons
 - Works with any boolean/tinyint column
 - Compatible with `->sortable()` and `->filterable()`
 
@@ -91,6 +93,51 @@ InlineToggle::make(__('Reminders Paused'), 'reminders_paused')
 
 **Message priority:** `onMessage`/`offMessage` > `successMessage` > default English fallback.
 
+### DependsOn
+
+Use Nova's `dependsOn()` to reactively control the field based on other field values:
+
+```php
+use Laravel\Nova\Http\Requests\NovaRequest;
+use Laravel\Nova\Fields\FormData;
+
+InlineToggle::make(__('Active'), 'is_active')
+    ->dependsOn('status', function (InlineToggle $field, NovaRequest $request, FormData $formData) {
+        if ($formData->status === 'archived') {
+            $field->hide();
+        }
+    });
+```
+
+You can also use it to dynamically change field properties:
+
+```php
+InlineToggle::make(__('Featured'), 'is_featured')
+    ->dependsOn('type', function (InlineToggle $field, NovaRequest $request, FormData $formData) {
+        if ($formData->type === 'premium') {
+            $field->onColor('#F59E0B');
+        }
+    });
+```
+
+The field also emits change events, so other fields can depend on it:
+
+```php
+Text::make('Label')
+    ->dependsOn('is_active', function (Text $field, NovaRequest $request, FormData $formData) {
+        $field->value = $formData->boolean('is_active') ? 'Enabled' : 'Disabled';
+    });
+```
+
+### Readonly
+
+The toggle respects Nova's `readonly()` method on all views (index, detail, and form):
+
+```php
+InlineToggle::make(__('Active'), 'is_active')
+    ->readonly()
+```
+
 ### Sorting & Filtering
 
 The field supports Nova's built-in sorting and filtering:
@@ -113,6 +160,11 @@ InlineToggle::make(__('invoice::invoice.field.reminders_paused'), 'reminders_pau
     ->onMessage(__('invoice::invoice.toggle.reminders_paused_on'))
     ->offMessage(__('invoice::invoice.toggle.reminders_paused_off'))
     ->errorMessage(__('invoice::invoice.toggle.error'))
+    ->dependsOn('status', function (InlineToggle $field, NovaRequest $request, FormData $formData) {
+        if ($formData->status === 'paid') {
+            $field->readonly();
+        }
+    })
     ->sortable()
     ->filterable(),
 ```
@@ -128,6 +180,8 @@ InlineToggle::make(__('invoice::invoice.field.reminders_paused'), 'reminders_pau
 | `onMessage(string $message)` | Success toast when toggled ON | Falls back to `successMessage` |
 | `offMessage(string $message)` | Success toast when toggled OFF | Falls back to `successMessage` |
 | `errorMessage(string $message)` | Error toast message | `"There was a problem updating the field."` |
+| `dependsOn($attributes, $callback)` | Register dependent field callback | — |
+| `readonly($value = true)` | Disable toggle interaction | `false` |
 
 ## How It Works
 
