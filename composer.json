@@ -1,6 +1,7 @@
 {
     "name": "wamesk/laravel-nova-inline-toggle",
     "description": "A Laravel Nova inline toggle/switch field with index page inline editing.",
+    "version": "1.1.0",
     "keywords": [
         "laravel",
         "nova",

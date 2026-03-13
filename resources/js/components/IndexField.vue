@@ -5,7 +5,7 @@
       class="inline-toggle-switch"
       :class="{ 'is-on': isOn, 'is-loading': loading }"
       :style="switchStyle"
-      :disabled="loading"
+      :disabled="loading || field.readonly"
       @click.stop.prevent="toggle"
     >
       <span class="inline-toggle-knob"></span>
@@ -47,6 +47,7 @@ export default {
 
   methods: {
     async toggle() {
+      if (this.field.readonly) return
       this.loading = true
       const newValue = !this.isOn
 

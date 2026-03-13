@@ -3,10 +3,15 @@
 namespace Wame\InlineToggle;
 
 use Laravel\Nova\Fields\Field;
+use Laravel\Nova\Fields\SupportsDependentFields;
 
 class InlineToggle extends Field
 {
+    use SupportsDependentFields;
+
     public $component = 'inline-toggle';
+
+    protected $dependentShouldEmitChangesEvent = true;
 
     protected function resolveAttribute($resource, $attribute)
     {
@@ -51,4 +56,5 @@ class InlineToggle extends Field
     {
         return $this->withMeta(['errorMessage' => $message]);
     }
+
 }

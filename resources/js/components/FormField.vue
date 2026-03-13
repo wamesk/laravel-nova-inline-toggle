@@ -7,6 +7,7 @@
           type="checkbox"
           class="checkbox"
           :checked="value"
+          :disabled="currentField.readonly"
           @change="handleChange"
         />
         <label :for="currentField.uniqueKey" class="ml-2 text-sm">
@@ -18,10 +19,10 @@
 </template>
 
 <script>
-import { FormField, HandlesValidationErrors } from 'laravel-nova'
+import { DependentFormField, HandlesValidationErrors } from 'laravel-nova'
 
 export default {
-  mixins: [FormField, HandlesValidationErrors],
+  mixins: [DependentFormField, HandlesValidationErrors],
 
   props: ['resourceName', 'resourceId', 'field'],
 
